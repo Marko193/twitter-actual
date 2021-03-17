@@ -28,7 +28,7 @@ async function getPayload(username, userLoggedIn) {
     let user = await User.findOne({ username });
     if (user == null) {
         return {
-            pageTitle: 'User not found!',
+            pageTitle: 'User wasn`t found!',
             userLoggedIn: userLoggedIn,
             userLoggedInJs: JSON.stringify(userLoggedIn)
         }
