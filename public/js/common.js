@@ -139,16 +139,29 @@ $(document).on("click", ".followButton", (e) => {
     $.ajax({
         url: `/api/users/${userId}/follow`,
         type: "PUT",
-        success: (data) => {
-            console.log(data);
+        success: (data, status, xhr) => {
+            if (xhr.status == 404) {
+                alert('User not found!');
+                return;
+            }
 
-            // button.find("span").text(postData.likes.length || "");
+            var difference = 1;
 
-            // if (postData.likes.includes(userLoggedIn._id)) {
-            //     button.addClass("active");
-            // } else {
-            //     button.removeClass("active");
-            // }
+            if (data.following && data.following.includes(userId)) {
+                button.addClass("following");
+                button.text("Following");
+            } else {
+                button.removeClass("following");
+                button.text("Follow");
+                difference = -1;
+            }
+
+            var followersLabel = $('#followersValue');
+            if (followersLabel.length != 0) {
+                var followersText = followersLabel.text();
+                followersText = parseInt(followersText);
+                followersLabel.text(followersText + difference);
+            }
         }
     })
 });
