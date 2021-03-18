@@ -85,7 +85,7 @@ router.put("/:id/like", async(req, res, next) => {
         .catch(error => {
             console.log(error);
             res.sendStatus(400);
-        })
+        });
 
     // Insert post like
     var post = await Post.findByIdAndUpdate(postId, {
