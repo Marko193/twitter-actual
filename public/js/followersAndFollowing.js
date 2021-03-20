@@ -20,20 +20,31 @@ function loadFollowing() {
 }
 
 function outputUsers(results, container) {
-    container.html('');
+    container.html("");
+
     results.forEach(result => {
-        let html = createUserHtml(result, true);
+        var html = createUserHtml(result, true);
         container.append(html);
     });
 
     if (results.length == 0) {
-        container.append(`<span class='noResults'>No results found!</span>`)
+        container.append("<span class='noResults'>No results found</span>")
     }
 }
 
 function createUserHtml(userData, showFollowButton) {
 
-    let name = userData.firstName + ' ' + userData.lastName;
+    var name = userData.firstName + " " + userData.lastName;
+    var isFollowing = userLoggedIn.following && userLoggedIn.following.includes(userData._id);
+    var text = isFollowing ? "Following" : "Follow"
+    var buttonClass = isFollowing ? "followButton following" : "followButton"
+
+    var followButton = "";
+    if (showFollowButton && userLoggedIn._id != userData._id) {
+        followButton = `<div class='followButtonContainer'>
+                            <button class='${buttonClass}' data-user='${userData._id}'>${text}</button>
+                        </div>`;
+    }
 
     return `<div class='user'>
                 <div class='userImageContainer'>
@@ -45,5 +56,6 @@ function createUserHtml(userData, showFollowButton) {
                         <span class='username'>@${userData.username}</span>
                     </div>
                 </div>
-            </div>`
+                ${followButton}
+            </div>`;
 }
