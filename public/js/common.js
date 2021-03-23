@@ -233,6 +233,20 @@ $('#coverPhotoButton').click(() => {
     });
 })
 
+$('#createChatButton').click(() => {
+    var data = JSON.stringify(selectedUsers);
+
+
+
+    $.post("/api/chats", { users: data }, chat => {
+        if (!chat || !chat_.id) {
+            return alert("Invalid response from the server.");
+        }
+        window.location.href = `/messages/${chat._id}`;
+    })
+})
+
+
 $("#userSearchTextbox").keydown((event) => {
     clearTimeout(timer);
     var textbox = $(event.target);

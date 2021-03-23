@@ -12,7 +12,7 @@ const server = app.listen(port, () => console.log("Server listening on port " + 
 app.set("view engine", "pug");
 app.set("views", "views");
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(session({
@@ -35,6 +35,7 @@ const logoutRoute = require('./routes/logout');
 // Api routes
 const postsApiRoute = require('./routes/api/posts');
 const usersApiRoute = require('./routes/api/users');
+const chatsApiRoute = require('./routes/api/chats');
 
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
@@ -46,6 +47,7 @@ app.use("/messages", middleware.requireLogin, messagesRoute);
 
 app.use("/api/posts", postsApiRoute);
 app.use("/api/users", usersApiRoute);
+app.use("/api/users", chatsApiRoute);
 
 app.use('/logout', logoutRoute);
 
