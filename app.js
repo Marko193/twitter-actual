@@ -47,7 +47,7 @@ app.use("/messages", middleware.requireLogin, messagesRoute);
 
 app.use("/api/posts", postsApiRoute);
 app.use("/api/users", usersApiRoute);
-app.use("/api/users", chatsApiRoute);
+app.use("/api/chats", chatsApiRoute);
 
 app.use('/logout', logoutRoute);
 

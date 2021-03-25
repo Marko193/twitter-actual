@@ -102,7 +102,7 @@ $("#pinPostButton").click((event) => {
     $.ajax({
         url: `/api/posts/${postId}`,
         type: "PUT",
-        data: { pinned: true },
+        data: {pinned: true},
         success: (data, status, xhr) => {
 
             if (xhr.status != 204) {
@@ -121,7 +121,7 @@ $("#unpinPostButton").click((event) => {
     $.ajax({
         url: `/api/posts/${postId}`,
         type: "PUT",
-        data: { pinned: false },
+        data: {pinned: false},
         success: (data, status, xhr) => {
 
             if (xhr.status != 204) {
@@ -134,8 +134,7 @@ $("#unpinPostButton").click((event) => {
     })
 })
 
-
-$('#filePhoto').change(function() {
+$('#filePhoto').change(function () {
     //let input = $(event.target);
 
     if (this.files && this.files[0]) {
@@ -159,7 +158,7 @@ $('#filePhoto').change(function() {
     }
 })
 
-$('#coverPhoto').change(function() {
+$('#coverPhoto').change(function () {
     //let input = $(event.target);
 
     if (this.files && this.files[0]) {
@@ -237,15 +236,13 @@ $('#createChatButton').click(() => {
     var data = JSON.stringify(selectedUsers);
 
 
-
-    $.post("/api/chats", { users: data }, chat => {
-        if (!chat || !chat_.id) {
+    $.post("/api/chats", {users: data}, chat => {
+        if (!chat || !chat._id) {
             return alert("Invalid response from the server.");
         }
         window.location.href = `/messages/${chat._id}`;
     })
 })
-
 
 $("#userSearchTextbox").keydown((event) => {
     clearTimeout(timer);
@@ -585,7 +582,7 @@ function createUserHtml(userData, showFollowButton) {
 }
 
 function searchUsers(searchTerm) {
-    $.get("/api/users", { search: searchTerm }, results => {
+    $.get("/api/users", {search: searchTerm}, results => {
         outputSelectableUsers(results, $(".resultsContainer"));
     })
 }
