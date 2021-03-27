@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
     }
 
     users.push(req.session.user);
-
+//
     var chatData = {
         users: users,
         isGroupChat: true
