@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const User = require('../schemas/UserSchema');
 const Chat = require('../schemas/ChatSchema');
 
 router.get("/", (req, res, next) => {
@@ -24,6 +26,18 @@ router.get("/:chatId", async (req, res, next) => {
 
     let userId = req.session.user._id;
     let chatId = req.params.chatId;
+    let isValidId = mongoose.isValidObjectId(chatId);
+
+    let payload = {
+        pageTitle: "Chat",
+        userLoggedIn: req.session.user,
+        userLoggedInJs: JSON.stringify(req.session.user)
+    };
+
+    if(!isValidId){
+        payload.errorMessage = "Chat doesn`t exist or you don`t have a permission to view it!";
+        res.status(200).render("chatPage", payload);
+    }
 
     let chat = await Chat.findOne({
         _id: chatId,
@@ -32,14 +46,20 @@ router.get("/:chatId", async (req, res, next) => {
 
     if (chat == null) {
         //TODO: Check if chat id is really user id
+        let userFound = await User.findById(chatId);
+
+        if (userFound != null) {
+            //TODO: GET CHAT USING USER ID
+        }
     }
 
-    res.status(200).render("chatPage", {
-        pageTitle: "Chat",
-        userLoggedIn: req.session.user,
-        userLoggedInJs: JSON.stringify(req.session.user),
-        chat: chat
-    });
+    if (chat == null) {
+        payload.errorMessage = "Chat doesn`t exist or you don`t have a permission to view it!"
+    } else {
+        payload.chat = chat;
+    }
+
+    res.status(200).render("chatPage", payload);
 });
 
 module.exports = router;
