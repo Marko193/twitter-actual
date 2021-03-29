@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const User = require('../schemas/UserSchema');
 const Chat = require('../schemas/ChatSchema');
+const User = require('../schemas/UserSchema');
 
 router.get("/", (req, res, next) => {
     let payload = {
@@ -34,7 +34,7 @@ router.get("/:chatId", async (req, res, next) => {
         userLoggedInJs: JSON.stringify(req.session.user)
     };
 
-    if(!isValidId){
+    if (!isValidId) {
         payload.errorMessage = "Chat doesn`t exist or you don`t have a permission to view it!";
         res.status(200).render("chatPage", payload);
     }
@@ -50,6 +50,7 @@ router.get("/:chatId", async (req, res, next) => {
 
         if (userFound != null) {
             //TODO: GET CHAT USING USER ID
+            chat = await getChatByUserId(userFound._id, userId);
         }
     }
 
@@ -61,5 +62,28 @@ router.get("/:chatId", async (req, res, next) => {
 
     res.status(200).render("chatPage", payload);
 });
+
+function getChatByUserId(userLoggedInId, otherUserId) {
+    return Chat.findOneAndUpdate({
+            isGroupChat: false,
+            users: {
+                $size: 2,
+                $all: [
+                    {$elemMatch: {$eq: mongoose.Types.ObjectId(userLoggedInId)}},
+                    {$elemMatch: {$eq: mongoose.Types.ObjectId(otherUserId)}}
+                ]
+            }
+        },
+        {
+            $setOnInsert: {
+                users: [userLoggedInId, otherUserId]
+            }
+        },
+        {
+            new: true,
+            upsert: true
+        })
+        .populate("users");
+}
 
 module.exports = router;
